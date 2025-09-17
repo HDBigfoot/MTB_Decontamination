@@ -1,20 +1,19 @@
 #!/usr/bin/env nextflow
 
-process Trimming {
+process Decontamination {
 
-    conda 'kraken2 krakentools'
+    conda 'fastp'
 
 
-    publishDir params.outdir + "/Trimming", mode: 'copy', saveAs: { filename -> if (filename.endsWith("1_fastp.fastq.gz")) {"${sampleName}_1_fastp.fastq.gz"}
+    publishDir params.outdir + "/Decontamination", mode: 'copy', saveAs: { filename -> if (filename.endsWith("1_fastp.fastq.gz")) {"${sampleName}_1_fastp.fastq.gz"}
                                                                    else if (filename.endsWith("2_fastp.fastq.gz")) {"${sampleName}_2_fastp.fastq.gz"}
                                                                    else if (filename.endsWith("html")) {"${sampleName}.fastp.html"}}
 
 
     input:
         val sampleName
-        path rawRead1
-        path rawRead2
-        path database
+        path fastp_R1
+        path fastp_R2
 
     output:
         path "${rawRead1}_fastp.fastq.gz", emit: fastp_R1
@@ -23,7 +22,8 @@ process Trimming {
 
     script:
     """
-    kraken2
+    kraken2 --db ${database} --report ${sampleName}.kraken2.report.txt --output ${sampleName}.kraken2.output.txt --paired ${fastp_R1} ${fastp_R2}
+    python
     fastp -i ${rawRead1} -I ${rawRead2} -o ${rawRead1}_fastp.fastq.gz -O ${rawRead2}_fastp.fastq.gz --length_required 50 --html ${rawRead1}.fastp.html
     """
 
