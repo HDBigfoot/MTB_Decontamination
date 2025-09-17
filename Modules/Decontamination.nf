@@ -23,7 +23,7 @@ process Decontamination {
     script:
     """
     kraken2 --db ${database} --report ${sampleName}.kraken2.report.txt --output ${sampleName}.kraken2.output.txt --paired ${fastp_R1} ${fastp_R2}
-    python
+    python ${projectDir}/KrakenTools/extract_kraken_reads.py -k ${sampleName}.kraken2.output.txt -s
     """
 
 }
