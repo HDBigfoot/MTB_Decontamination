@@ -23,7 +23,6 @@ process Trimming {
 
     script:
     """
-    kraken2
     fastp -i ${rawRead1} -I ${rawRead2} -o ${rawRead1}_fastp.fastq.gz -O ${rawRead2}_fastp.fastq.gz --length_required 50 --html ${rawRead1}.fastp.html
     """
 
