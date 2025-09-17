@@ -16,14 +16,17 @@ process Decontamination {
         path rawRead2
 
     output:
-        path "${rawRead1}_fastp.fastq.gz", emit: fastp_R1
-        path "${rawRead2}_fastp.fastq.gz", emit: fastp_R2
-        path "${rawRead1}.fastp.html"
+        path "${rawRead1}.decon.fastq.gz", emit: decon_R1
+        path "${rawRead2}.decon.fastq.gz", emit: decon_R2
+        path "${sampleName}.report.txt"
 
     script:
     """
     kraken2 --db ${database} --report ${sampleName}.kraken2.report.txt --output ${sampleName}.kraken2.output.txt --paired ${rawRead1} ${rawRead2}
-    python ${projectDir}/KrakenTools/extract_kraken_reads.py -k ${sampleName}.kraken2.output.txt -s ${rawRead1}
+    python ${projectDir}/KrakenTools/extract_kraken_reads.py -k ${sampleName}.kraken2.output.txt -s ${rawRead1} -o ${rawRead1}.decon.fastq -t 77643 --fastq-output
+    python ${projectDir}/KrakenTools/extract_kraken_reads.py -k ${sampleName}.kraken2.output.txt -s ${rawRead2} -o ${rawRead2}.decon.fastq -t 77643 --fastq-output
+    gzip ${rawRead1}.decon.fastq
+    gzip ${rawRead2}.decon.fastq
     """
 
 }
