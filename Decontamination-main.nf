@@ -26,7 +26,7 @@ workflow {
     database_ch = Channel.fromPath(params.database)
 
     Trimming(sampleName_ch, rawRead1_ch, rawRead2_ch)
-    Decontamination(sampleName_ch, Trimming.out.fastp_R1, Trimming.out.fastp_R2, database_ch)
+    Decontamination(sampleName_ch, Trimming.out.fastp_R1, Trimming.out.fastp_R2, database_ch, rawRead1_ch, rawRead2_ch)
     Mapping(sampleName_ch, Trimming.out.fastp_R1, Trimming.out.fastp_R2, ref_file, ref_index_file, ref_dict_file)
 
 }
