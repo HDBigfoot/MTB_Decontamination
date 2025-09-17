@@ -4,7 +4,7 @@ params.sample_name = "Sample"
 params.outdir = "Results"
 
 log.info """
-Pipeline_12 - Analysis pipeline for detecting unfixed variants in Mycobacterium tuberculosis
+Filter out non-MTB reads
 RC3ID
 Universitas Padjadjaran
 ================================
@@ -15,7 +15,6 @@ databse    : $params.database
 ================================
 """
 
-include { Trimming } from './modules/Trimming.nf'
 include { Decontamination } from './modules/Decontamination.nf'
 
 workflow {
@@ -25,8 +24,6 @@ workflow {
     rawRead2_ch = Channel.fromPath(params.raw_read2)
     database_ch = Channel.fromPath(params.database)
 
-    Trimming(sampleName_ch, rawRead1_ch, rawRead2_ch)
-    Decontamination(sampleName_ch, Trimming.out.fastp_R1, Trimming.out.fastp_R2, database_ch, rawRead1_ch, rawRead2_ch)
-    Mapping(sampleName_ch, Trimming.out.fastp_R1, Trimming.out.fastp_R2, ref_file, ref_index_file, ref_dict_file)
+    Decontamination(sampleName_ch, raw_read1_ch, raw_read2_ch, database_ch)
 
 }
