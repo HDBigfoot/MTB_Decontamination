@@ -19,7 +19,7 @@ process Decontamination {
     output:
         path "${rawRead1}_R1.decon.fastq.gz", emit: decon_R1
         path "${rawRead2}_R2.decon.fastq.gz", emit: decon_R2
-        path "${sampleName}.report.txt"
+        path "${sampleName}.kraken2.report.txt"
 
     script:
     """

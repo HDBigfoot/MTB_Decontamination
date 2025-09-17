@@ -24,6 +24,6 @@ workflow {
     rawRead2_ch = Channel.fromPath(params.raw_read2)
     database_ch = Channel.fromPath(params.database)
 
-    Decontamination(sampleName_ch, raw_read1_ch, raw_read2_ch, database_ch)
+    Decontamination(sampleName_ch, rawRead1_ch, rawRead2_ch, database_ch)
 
 }
