@@ -24,7 +24,6 @@ process Decontamination {
     """
     kraken2 --db ${database} --report ${sampleName}.kraken2.report.txt --output ${sampleName}.kraken2.output.txt --paired ${fastp_R1} ${fastp_R2}
     python
-    fastp -i ${rawRead1} -I ${rawRead2} -o ${rawRead1}_fastp.fastq.gz -O ${rawRead2}_fastp.fastq.gz --length_required 50 --html ${rawRead1}.fastp.html
     """
 
 }
