@@ -2,7 +2,7 @@
 
 process Decontamination {
 
-    conda 'fastp'
+    conda 'kraken2 krakentools'
 
 
     publishDir params.outdir + "/Decontamination", mode: 'copy', saveAs: { filename -> if (filename.endsWith("1_fastp.fastq.gz")) {"${sampleName}_1_fastp.fastq.gz"}
@@ -12,8 +12,8 @@ process Decontamination {
 
     input:
         val sampleName
-        path fastp_R1
-        path fastp_R2
+        path rawRead1
+        path rawRead2
 
     output:
         path "${rawRead1}_fastp.fastq.gz", emit: fastp_R1
@@ -22,8 +22,8 @@ process Decontamination {
 
     script:
     """
-    kraken2 --db ${database} --report ${sampleName}.kraken2.report.txt --output ${sampleName}.kraken2.output.txt --paired ${fastp_R1} ${fastp_R2}
-    python ${projectDir}/KrakenTools/extract_kraken_reads.py -k ${sampleName}.kraken2.output.txt -s
+    kraken2 --db ${database} --report ${sampleName}.kraken2.report.txt --output ${sampleName}.kraken2.output.txt --paired ${rawRead1} ${rawRead2}
+    python ${projectDir}/KrakenTools/extract_kraken_reads.py -k ${sampleName}.kraken2.output.txt -s ${rawRead1}
     """
 
 }
